@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<title>Quiz Investigativo</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .box {
+    background: #1e1e1e;
+    padding: 20px;
+    margin: 15px auto;
+    width: 80%;
+    border-radius: 10px;
+  }
+
+  input {
+    width: 90%;
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  button {
+    padding: 12px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+    background: #00c853;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+  }
+
+  #resultado {
+    margin-top: 20px;
+    font-size: 18px;
+    white-space: pre-line;
+  }
+
+  #score {
+    font-size: 22px;
+    margin-top: 15px;
+    color: #ffd700;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Quiz Investigativo</h1>
+
+<div class="box">
+  <p>1. Quem matou Antonio?</p>
+  <input id="q1">
+</div>
+
+<div class="box">
+  <p>2. Por que matou Antonio?</p>
+  <input id="q2">
+</div>
+
+<div class="box">
+  <p>3. Como o corpo apareceu novamente na floresta?</p>
+  <input id="q3">
+</div>
+
+<div class="box">
+  <p>4. Explique o que aconteceu naquele dia</p>
+  <input id="q4">
+</div>
+
+<button onclick="verificar()">Analisar caso</button>
+
+<div id="score"></div>
+<div id="resultado"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+function normalizar(t) {
+  return t.toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function correto(resposta, chaves) {
+  let texto = normalizar(resposta);
+  return chaves.some(c => texto.includes(c));
+}
+
+function verificar() {
+
+  let r1 = document.getElementById("q1").value;
+  let r2 = document.getElementById("q2").value;
+  let r3 = document.getElementById("q3").value;
+  let r4 = document.getElementById("q4").value;
+
+  let acertos = 0;
+  let erros = [];
+
+  if (correto(r1, ["raimundo"])) acertos++;
+  else erros.push("Pergunta 1 incorreta");
+
+  if (correto(r2, ["roub", "tecid"])) acertos++;
+  else erros.push("Pergunta 2 incorreta");
+
+  if (correto(r3, ["forj", "florest", "passagem", "corpo"])) acertos++;
+  else erros.push("Pergunta 3 incorreta");
+
+  if (correto(r4, ["raimundo", "matou", "roub", "florest", "fuga", "antonio"])) acertos++;
+  else erros.push("Pergunta 4 incorreta");
+
+  let porcentagem = (acertos / 4) * 100;
+
+  document.getElementById("score").innerText =
+    "Ranking de Detetive: " + porcentagem + "%";
+
+  let resultado = document.getElementById("resultado");
+
+  if (acertos === 4) {
+
+    resultado.innerText = "Caso totalmente resolvido! Detetive perfeito.";
+
+    let audio = new Audio("https://www.soundjay.com/human/applause-8.mp3");
+    audio.play();
+
+    let end = Date.now() + 3000;
+
+    (function frame() {
+      confetti({
+        particleCount: 6,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+
+    // 🔥 AQUI VOCÊ TROCA O NOME DO ARQUIVO FINAL
+    setTimeout(() => {
+      window.open("./resultado.png","_blank"); // <-- TROQUE AQUI SE PRECISAR
+    }, 3500);
+
+  } else {
+    resultado.innerText =
+      "Resultado da análise:\n\n" +
+      erros.join("\n");
+  }
+}
+</script>
+
+</body>
+</html>
