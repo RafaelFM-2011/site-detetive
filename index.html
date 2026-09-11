@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -276,79 +276,60 @@ function analisarPergunta(numero, resposta) {
      ======================================================= */
 
   if (numero === 2) {
-
-    let rivalidade =
-      contemAlguma(texto, [
+    const motivos = [
         "rival",
+        "rivalidade",
         "concorrente",
+        "concorrência",
+        "empresa",
         "tecido",
+        "tecidos",
+        "têxtil",
+        "textil",
+        "produto",
         "produtos",
+        "roubar",
+        "roubava",
+        "roubou",
         "roubo",
-        "roubar"
-      ]);
+        "roubando",
+        "roubado",
+        "vendia",
+        "revendia",
+        "revender",
+        "prejudicar",
+        "prejuízo",
+        "vingança",
+        "conflito",
+        "disputa"
+    ];
 
-    let fraude =
-      contemAlguma(texto, [
-        "fraude",
-        "corrupcao",
-        "lavagem",
-        "dinheiro",
-        "negocio"
-      ]);
+    const encontrouMotivo = motivos.some(
+        palavra => texto.includes(normalizar(palavra))
+    );
 
-    let vinganca =
-      contemAlguma(texto, [
-        "vinganca",
-        "vingar",
-        "briga",
-        "discussao",
-        "raiva"
-      ]);
+    const negacao = [
+        "nao foi",
+        "nao matou",
+        "sem motivo",
+        "nenhum motivo",
+        "nao sei"
+    ].some(frase => texto.includes(normalizar(frase)));
 
-    let pontos = 0;
-
-    if (rivalidade) pontos += 10;
-    if (fraude) pontos += 7;
-    if (vinganca) pontos += 3;
-
-
-    if (pontos >= 15) {
-
-      return {
-        pontos: 25,
-        classe: "certo",
-        titulo: "✓ Motivo bem fundamentado",
-        mensagem:
-          "Sua explicação considera elementos reais do conflito entre os envolvidos. " +
-          "Ainda assim, tome cuidado para não confundir um possível motivo com uma prova definitiva de autoria."
-      };
-
-    }
-
-    if (pontos >= 7) {
-
-      return {
-        pontos: 15,
-        classe: "parcial",
-        titulo: "⚠️ Explicação parcialmente fundamentada",
-        mensagem:
-          "Você encontrou uma parte importante do possível motivo, mas sua explicação ainda não relaciona todas as circunstâncias relevantes. " +
-          "Algumas pistas financeiras e comerciais podem ter mais importância do que parecem."
-      };
-
+    if (encontrouMotivo && !negacao) {
+        return {
+            pontos: 25,
+            explicacao:
+                "Correto. Raimundo tinha um conflito com Antonio relacionado à empresa têxtil e às acusações de que Antonio roubava ou revendia produtos."
+        };
     }
 
     return {
-      pontos: 0,
-      classe: "errado",
-      titulo: "✗ Motivo não esclarecido",
-      mensagem:
-        "O motivo apresentado não explica adequadamente o conflito que existia entre Antonio e os demais envolvidos. " +
-        "Procure relacionar os acontecimentos da investigação com os interesses que Antonio escondia."
+        pontos: 0,
+        explicacao:
+            "Essa resposta não apresenta o principal motivo da morte. Procure nas pistas a relação entre Antonio, Raimundo e a empresa têxtil."
     };
-
-  }
-
+}
 
   /* =======================================================
      PERGUNTA 3
