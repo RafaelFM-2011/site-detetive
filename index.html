@@ -1,7 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Quiz Investigativo</title>
 
 <style>
@@ -13,22 +16,37 @@
     padding: 20px;
   }
 
+  h1 {
+    margin-bottom: 30px;
+  }
+
   .box {
     background: #1e1e1e;
     padding: 20px;
-    margin: 15px auto;
+    margin: 18px auto;
     width: 80%;
+    max-width: 900px;
     border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  }
+
+  .box p {
+    font-size: 18px;
   }
 
   input {
-    width: 90%;
-    padding: 10px;
+    width: 95%;
+    padding: 12px;
     margin-top: 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+    box-sizing: border-box;
   }
 
   button {
-    padding: 12px 20px;
+    padding: 14px 25px;
     margin-top: 20px;
     cursor: pointer;
     border: none;
@@ -36,47 +54,86 @@
     color: white;
     font-weight: bold;
     border-radius: 8px;
+    font-size: 16px;
+  }
+
+  button:hover {
+    background: #00a844;
+  }
+
+  #score {
+    font-size: 24px;
+    margin-top: 25px;
+    color: #ffd700;
   }
 
   #resultado {
-    margin-top: 20px;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 900px;
     font-size: 18px;
     white-space: pre-line;
   }
 
-  #score {
-    font-size: 22px;
+  .analise {
     margin-top: 15px;
-    color: #ffd700;
+    padding: 15px;
+    background: #292929;
+    border-left: 4px solid #777;
+    border-radius: 5px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .certo {
+    border-left-color: #00c853;
+  }
+
+  .parcial {
+    border-left-color: #ffd600;
+  }
+
+  .errado {
+    border-left-color: #d50000;
+  }
+
+  .titulo-analise {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .detetive {
+    margin-top: 20px;
+    font-size: 20px;
   }
 </style>
 </head>
 
 <body>
 
-<h1>Quiz Investigativo</h1>
+<h1>🕵️ Quiz Investigativo</h1>
 
 <div class="box">
-  <p>1. Quem matou Antonio?</p>
-  <input id="q1">
+  <p><strong>1. Quem matou Antonio?</strong></p>
+  <input id="q1" placeholder="Digite sua conclusão...">
 </div>
 
 <div class="box">
-  <p>2. Por que matou Antonio?</p>
-  <input id="q2">
+  <p><strong>2. Por que Antonio foi morto?</strong></p>
+  <input id="q2" placeholder="Explique o possível motivo...">
 </div>
 
 <div class="box">
-  <p>3. Como o corpo apareceu novamente na floresta?</p>
-  <input id="q3">
+  <p><strong>3. O que explica o desaparecimento do corpo e sua aparição posterior na floresta?</strong></p>
+  <input id="q3" placeholder="Explique sua teoria...">
 </div>
 
 <div class="box">
-  <p>4. Explique o que aconteceu naquele dia</p>
-  <input id="q4">
+  <p><strong>4. Reconstitua o que aconteceu naquela madrugada.</strong></p>
+  <input id="q4" placeholder="Apresente sua teoria completa...">
 </div>
 
-<button onclick="verificar()">Analisar caso</button>
+<button onclick="verificar()">🔎 Analisar caso</button>
 
 <div id="score"></div>
 <div id="resultado"></div>
@@ -84,77 +141,539 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-function normalizar(t) {
-  return t.toLowerCase()
+
+/* =========================================================
+   NORMALIZAÇÃO
+   ========================================================= */
+
+function normalizar(texto) {
+
+  return texto
+    .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
 }
 
-function correto(resposta, chaves) {
-  let texto = normalizar(resposta);
-  return chaves.some(c => texto.includes(c));
+
+/* =========================================================
+   VERIFICA SE UMA IDEIA ESTÁ PRESENTE
+   ========================================================= */
+
+function contemAlguma(texto, palavras) {
+
+  return palavras.some(palavra =>
+    texto.includes(normalizar(palavra))
+  );
+
 }
+
+
+/* =========================================================
+   VERIFICA SE O JOGADOR NEGOU UMA IDEIA
+   Evita coisas como:
+   "Raimundo não matou Antonio"
+   serem consideradas corretas só porque possuem "Raimundo".
+   ========================================================= */
+
+function negou(texto, palavras) {
+
+  for (let palavra of palavras) {
+
+    let p = normalizar(palavra);
+
+    let posicao = texto.indexOf(p);
+
+    if (posicao !== -1) {
+
+      let antes = texto.substring(
+        Math.max(0, posicao - 25),
+        posicao
+      );
+
+      if (
+        antes.includes("nao") ||
+        antes.includes("nunca") ||
+        antes.includes("jamais") ||
+        antes.includes("inocente")
+      ) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+
+/* =========================================================
+   RESULTADO DE CADA QUESTÃO
+   ========================================================= */
+
+function analisarPergunta(numero, resposta) {
+
+  let texto = normalizar(resposta);
+
+  if (texto.length < 3) {
+
+    return {
+      pontos: 0,
+      classe: "errado",
+      titulo: "⚠️ Resposta insuficiente",
+      mensagem:
+        "Não há informações suficientes para analisar sua conclusão."
+    };
+
+  }
+
+
+  /* =======================================================
+     PERGUNTA 1
+     ======================================================= */
+
+  if (numero === 1) {
+
+    let raimundo =
+      contemAlguma(texto, [
+        "raimundo"
+      ]);
+
+    let negacao =
+      negou(texto, [
+        "raimundo"
+      ]);
+
+    if (raimundo && !negacao) {
+
+      return {
+        pontos: 25,
+        classe: "certo",
+        titulo: "✓ Suspeito identificado",
+        mensagem:
+          "Sua conclusão aponta para o suspeito correto. " +
+          "Entretanto, identificar o responsável não significa que todas as circunstâncias do crime tenham sido explicadas."
+      };
+
+    }
+
+    return {
+      pontos: 0,
+      classe: "errado",
+      titulo: "✗ Conclusão incompatível",
+      mensagem:
+        "A pessoa que você apontou não explica satisfatoriamente todas as evidências encontradas durante a investigação. " +
+        "Reavalie principalmente as pistas que pareciam incriminar alguém de forma muito óbvia."
+    };
+
+  }
+
+
+  /* =======================================================
+     PERGUNTA 2
+     ======================================================= */
+
+  if (numero === 2) {
+
+    let rivalidade =
+      contemAlguma(texto, [
+        "rival",
+        "concorrente",
+        "tecido",
+        "produtos",
+        "roubo",
+        "roubar"
+      ]);
+
+    let fraude =
+      contemAlguma(texto, [
+        "fraude",
+        "corrupcao",
+        "lavagem",
+        "dinheiro",
+        "negocio"
+      ]);
+
+    let vinganca =
+      contemAlguma(texto, [
+        "vinganca",
+        "vingar",
+        "briga",
+        "discussao",
+        "raiva"
+      ]);
+
+    let pontos = 0;
+
+    if (rivalidade) pontos += 10;
+    if (fraude) pontos += 7;
+    if (vinganca) pontos += 3;
+
+
+    if (pontos >= 15) {
+
+      return {
+        pontos: 25,
+        classe: "certo",
+        titulo: "✓ Motivo bem fundamentado",
+        mensagem:
+          "Sua explicação considera elementos reais do conflito entre os envolvidos. " +
+          "Ainda assim, tome cuidado para não confundir um possível motivo com uma prova definitiva de autoria."
+      };
+
+    }
+
+    if (pontos >= 7) {
+
+      return {
+        pontos: 15,
+        classe: "parcial",
+        titulo: "⚠️ Explicação parcialmente fundamentada",
+        mensagem:
+          "Você encontrou uma parte importante do possível motivo, mas sua explicação ainda não relaciona todas as circunstâncias relevantes. " +
+          "Algumas pistas financeiras e comerciais podem ter mais importância do que parecem."
+      };
+
+    }
+
+    return {
+      pontos: 0,
+      classe: "errado",
+      titulo: "✗ Motivo não esclarecido",
+      mensagem:
+        "O motivo apresentado não explica adequadamente o conflito que existia entre Antonio e os demais envolvidos. " +
+        "Procure relacionar os acontecimentos da investigação com os interesses que Antonio escondia."
+    };
+
+  }
+
+
+  /* =======================================================
+     PERGUNTA 3
+     ======================================================= */
+
+  if (numero === 3) {
+
+    let desaparecimento =
+      contemAlguma(texto, [
+        "desapareceu",
+        "desaparecimento",
+        "tiraram",
+        "levaram",
+        "retiraram",
+        "corpo"
+      ]);
+
+    let passagem =
+      contemAlguma(texto, [
+        "passagem secreta",
+        "porta secreta",
+        "biblioteca",
+        "escritorio"
+      ]);
+
+    let floresta =
+      contemAlguma(texto, [
+        "floresta",
+        "cabana",
+        "lago"
+      ]);
+
+    let livro =
+      contemAlguma(texto, [
+        "livro 9",
+        "livro",
+        "documentos",
+        "passagem"
+      ]);
+
+    let pontos = 0;
+
+    if (desaparecimento) pontos += 5;
+    if (passagem) pontos += 8;
+    if (floresta) pontos += 5;
+    if (livro) pontos += 7;
+
+
+    if (pontos >= 18) {
+
+      return {
+        pontos: 25,
+        classe: "certo",
+        titulo: "✓ Boa reconstrução",
+        mensagem:
+          "Sua teoria relaciona corretamente vários elementos da cena. " +
+          "Você percebeu que o desaparecimento não pode ser analisado isoladamente do escritório, da biblioteca e do que foi encontrado posteriormente."
+      };
+
+    }
+
+    if (pontos >= 10) {
+
+      return {
+        pontos: 15,
+        classe: "parcial",
+        titulo: "⚠️ Há uma parte importante faltando",
+        mensagem:
+          "Sua teoria explica parte do acontecimento, mas ainda existe uma conexão importante entre dois locais da mansão que você não considerou completamente."
+      };
+
+    }
+
+    return {
+      pontos: 0,
+      classe: "errado",
+      titulo: "✗ A teoria não explica o desaparecimento",
+      mensagem:
+        "Sua explicação não consegue relacionar suficientemente o desaparecimento do corpo com as evidências encontradas na mansão. " +
+        "Reexamine a relação entre o escritório e a biblioteca."
+    };
+
+  }
+
+
+  /* =======================================================
+     PERGUNTA 4
+     ======================================================= */
+
+  if (numero === 4) {
+
+    let elementos = 0;
+
+    if (contemAlguma(texto, ["raimundo"])) elementos++;
+
+    if (
+      contemAlguma(texto, [
+        "passagem secreta",
+        "porta secreta"
+      ])
+    ) elementos++;
+
+    if (
+      contemAlguma(texto, [
+        "relogio",
+        "4 12",
+        "4:12"
+      ])
+    ) elementos++;
+
+    if (
+      contemAlguma(texto, [
+        "luz",
+        "apagou",
+        "queda de energia",
+        "escuro"
+      ])
+    ) elementos++;
+
+    if (
+      contemAlguma(texto, [
+        "corpo",
+        "desapareceu"
+      ])
+    ) elementos++;
+
+    if (
+      contemAlguma(texto, [
+        "floresta"
+      ])
+    ) elementos++;
+
+    if (
+      contemAlguma(texto, [
+        "livro 9",
+        "livro"
+      ])
+    ) elementos++;
+
+    if (
+      contemAlguma(texto, [
+        "fuga",
+        "fugiu",
+        "passagem"
+      ])
+    ) elementos++;
+
+
+    /*
+      Para uma resposta completa, o jogador precisa
+      relacionar várias pistas.
+
+      Isso impede que apenas escrever
+      "Raimundo matou Antonio"
+      resolva a questão.
+    */
+
+    if (elementos >= 6) {
+
+      return {
+        pontos: 25,
+        classe: "certo",
+        titulo: "✓ Reconstrução consistente",
+        mensagem:
+          "Sua reconstrução consegue conectar uma grande quantidade das evidências apresentadas durante o caso. " +
+          "A conclusão não depende apenas de uma pista isolada."
+      };
+
+    }
+
+    if (elementos >= 4) {
+
+      return {
+        pontos: 15,
+        classe: "parcial",
+        titulo: "⚠️ Reconstrução incompleta",
+        mensagem:
+          "Você conseguiu conectar várias pistas, mas ainda existem acontecimentos importantes que não foram explicados. " +
+          "Tente descobrir por que determinados objetos desapareceram e qual era a função deles na sequência dos acontecimentos."
+      };
+
+    }
+
+    return {
+      pontos: 0,
+      classe: "errado",
+      titulo: "✗ Muitas lacunas na reconstrução",
+      mensagem:
+        "Sua teoria ainda deixa acontecimentos importantes sem explicação. " +
+        "Não tente resolver o caso usando apenas quem parece suspeito: reconstrua a ordem dos acontecimentos e compare cada pista."
+    };
+
+  }
+
+}
+
+
+/* =========================================================
+   ANALISAR CASO
+   ========================================================= */
 
 function verificar() {
 
-  let r1 = document.getElementById("q1").value;
-  let r2 = document.getElementById("q2").value;
-  let r3 = document.getElementById("q3").value;
-  let r4 = document.getElementById("q4").value;
+  let respostas = [
+    document.getElementById("q1").value,
+    document.getElementById("q2").value,
+    document.getElementById("q3").value,
+    document.getElementById("q4").value
+  ];
 
-  let acertos = 0;
-  let erros = [];
+  let total = 0;
+  let analises = "";
 
-  if (correto(r1, ["raimundo"])) acertos++;
-  else erros.push("Pergunta 1 incorreta");
 
-  if (correto(r2, ["roub", "tecid"])) acertos++;
-  else erros.push("Pergunta 2 incorreta");
+  respostas.forEach((resposta, index) => {
 
-  if (correto(r3, ["forj", "florest", "passagem", "corpo"])) acertos++;
-  else erros.push("Pergunta 3 incorreta");
+    let resultado = analisarPergunta(
+      index + 1,
+      resposta
+    );
 
-  if (correto(r4, ["raimundo", "matou", "roub", "florest", "fuga", "antonio"])) acertos++;
-  else erros.push("Pergunta 4 incorreta");
+    total += resultado.pontos;
 
-  let porcentagem = (acertos / 4) * 100;
+    analises += `
+      <div class="analise ${resultado.classe}">
+        <div class="titulo-analise">
+          Pergunta ${index + 1}: ${resultado.titulo}
+        </div>
+
+        ${resultado.mensagem}
+      </div>
+    `;
+
+  });
+
 
   document.getElementById("score").innerText =
-    "Ranking de Detetive: " + porcentagem + "%";
+    "Ranking de Detetive: " + total + "%";
 
-  let resultado = document.getElementById("resultado");
 
-  if (acertos === 4) {
+  let classificacao = "";
 
-    resultado.innerText = "Caso totalmente resolvido! Detetive perfeito.";
+  if (total === 100) {
 
-    let audio = new Audio("https://www.soundjay.com/human/applause-8.mp3");
-    audio.play();
+    classificacao =
+      "🕵️ Detetive excepcional. Você conseguiu reconstruir o caso.";
+
+  } else if (total >= 75) {
+
+    classificacao =
+      "🔎 Excelente investigação. Algumas peças ainda precisam ser encaixadas.";
+
+  } else if (total >= 50) {
+
+    classificacao =
+      "🧐 Bom trabalho. Você encontrou pistas importantes, mas ainda existem contradições.";
+
+  } else if (total >= 25) {
+
+    classificacao =
+      "📋 Você encontrou algumas pistas, mas a investigação ainda está longe de ser concluída.";
+
+  } else {
+
+    classificacao =
+      "🔍 A investigação ainda precisa avançar. Volte às evidências antes de tirar uma conclusão.";
+
+  }
+
+
+  document.getElementById("resultado").innerHTML =
+    `<div class="detetive">${classificacao}</div>` +
+    analises;
+
+
+  /* =======================================================
+     FINAL PERFEITO
+     ======================================================= */
+
+  if (total === 100) {
+
+    let audio =
+      new Audio(
+        "https://www.soundjay.com/human/applause-8.mp3"
+      );
+
+    audio.play().catch(() => {});
+
 
     let end = Date.now() + 3000;
 
     (function frame() {
+
       confetti({
         particleCount: 6,
         spread: 90,
-        origin: { y: 0.6 }
+        origin: {
+          y: 0.6
+        }
       });
 
-      if (Date.now() < end) requestAnimationFrame(frame);
+      if (Date.now() < end) {
+
+        requestAnimationFrame(frame);
+
+      }
+
     })();
 
-    // 🔥 AQUI VOCÊ TROCA O NOME DO ARQUIVO FINAL
+
     setTimeout(() => {
-      window.open("./resultado.png","_blank"); // <-- TROQUE AQUI SE PRECISAR
+
+      window.open(
+        "./resultado.png",
+        "_blank"
+      );
+
     }, 3500);
 
-  } else {
-    resultado.innerText =
-      "Resultado da análise:\n\n" +
-      erros.join("\n");
   }
+
 }
+
 </script>
 
 </body>
 </html>
+```
