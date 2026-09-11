@@ -3,776 +3,278 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Quiz Investigativo</title>
-
 <style>
-    body {
-        margin: 0;
-        padding: 20px;
-        background: #111;
-        color: #eee;
-        font-family: Arial, sans-serif;
-    }
-
-    .container {
-        max-width: 900px;
-        margin: auto;
-    }
-
-    h1 {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .questao {
-        background: #1b1b1b;
-        border: 1px solid #333;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-
-    .questao h2 {
-        margin-top: 0;
-    }
-
-    textarea {
-        width: 100%;
-        min-height: 110px;
-        box-sizing: border-box;
-        resize: vertical;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #444;
-        background: #0b0b0b;
-        color: white;
-        font-size: 16px;
-        font-family: Arial, sans-serif;
-    }
-
-    button {
-        display: block;
-        margin: 30px auto;
-        padding: 15px 30px;
-        border: none;
-        border-radius: 10px;
-        background: white;
-        color: black;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    button:hover {
-        transform: scale(1.03);
-    }
-
-    #resultado {
-        margin-top: 30px;
-    }
-
-    .resultado-box {
-        background: #1b1b1b;
-        border: 1px solid #444;
-        border-radius: 10px;
-        padding: 18px;
-        margin-bottom: 15px;
-    }
-
-    .resultado-box h3 {
-        margin-top: 0;
-    }
-
-    .explicacao {
-        line-height: 1.5;
-        margin-top: 10px;
-    }
-
-    .dica {
-        margin-top: 12px;
-        padding: 12px;
-        background: #292929;
-        border-radius: 8px;
-        line-height: 1.4;
-    }
-
-    .nota-final {
-        text-align: center;
-        font-size: 28px;
-        font-weight: bold;
-        margin: 30px 0;
-    }
-
-    .sucesso {
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-        margin: 25px 0;
-    }
-
-    .confete {
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        top: -20px;
-        z-index: 9999;
-        animation: cair 3s linear forwards;
-    }
-
-    @keyframes cair {
-        to {
-            transform: translateY(110vh) rotate(720deg);
-            opacity: 0;
-        }
-    }
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#111;color:#eee;font-family:Arial,sans-serif}
+.container{max-width:900px;margin:auto}
+h1{text-align:center;margin:10px 0 30px}
+.questao{background:#1b1b1b;border:1px solid #333;border-radius:12px;padding:20px;margin-bottom:20px}
+.questao h2{margin-top:0;font-size:20px}
+textarea{width:100%;min-height:110px;resize:vertical;padding:12px;background:#0b0b0b;color:#fff;border:1px solid #444;border-radius:8px;font:16px Arial,sans-serif}
+button{display:block;margin:30px auto;padding:15px 30px;font-size:18px;font-weight:bold;border:0;border-radius:10px;background:#eee;color:#111;cursor:pointer}
+button:hover{background:#fff;transform:scale(1.02)}
+.resultado-box{background:#1b1b1b;border:1px solid #444;border-radius:10px;padding:18px;margin:15px 0}
+.resultado-box h3{margin-top:0}
+.explicacao{margin-top:10px;line-height:1.5}
+.dica{margin-top:12px;padding:12px;background:#292929;border-radius:8px;color:#ddd;line-height:1.4}
+.nota-final{text-align:center;font-size:24px;font-weight:bold;margin:25px 0}
+.sucesso{text-align:center;background:#17351d;border:1px solid #2f7d3c;padding:18px;border-radius:10px;line-height:1.5}
+.confete{position:fixed;top:-12px;width:9px;height:14px;z-index:9999;animation:queda linear forwards;pointer-events:none}
+@keyframes queda{to{transform:translateY(105vh) rotate(720deg);opacity:0}}
 </style>
 </head>
-
 <body>
-
 <div class="container">
+<h1>🔎 Quiz Investigativo</h1>
 
-    <h1>🔎 Quiz Investigativo</h1>
-
-
-    <!-- QUESTÃO 1 -->
-
-    <div class="questao">
-        <h2>1. Quem matou Antonio?</h2>
-
-        <textarea
-            id="q1"
-            placeholder="Digite sua resposta..."
-        ></textarea>
-    </div>
-
-
-    <!-- QUESTÃO 2 -->
-
-    <div class="questao">
-        <h2>2. Por que matou Antonio?</h2>
-
-        <textarea
-            id="q2"
-            placeholder="Explique o motivo..."
-        ></textarea>
-    </div>
-
-
-    <!-- QUESTÃO 3 -->
-
-    <div class="questao">
-        <h2>3. Como o corpo apareceu novamente na floresta?</h2>
-
-        <textarea
-            id="q3"
-            placeholder="Explique o que aconteceu..."
-        ></textarea>
-    </div>
-
-
-    <!-- QUESTÃO 4 -->
-
-    <div class="questao">
-        <h2>4. Explique o que aconteceu naquele dia.</h2>
-
-        <textarea
-            id="q4"
-            placeholder="Reconstrua toda a história..."
-        ></textarea>
-    </div>
-
-
-    <button onclick="verificar()">
-        🔎 Analisar Caso
-    </button>
-
-
-    <div id="resultado"></div>
-
+<div class="questao">
+<h2>1. Quem matou Antonio?</h2>
+<textarea id="q1" placeholder="Digite sua resposta..."></textarea>
 </div>
 
+<div class="questao">
+<h2>2. Por que matou Antonio?</h2>
+<textarea id="q2" placeholder="Explique o motivo..."></textarea>
+</div>
+
+<div class="questao">
+<h2>3. Como o corpo apareceu novamente na floresta?</h2>
+<textarea id="q3" placeholder="Explique o que aconteceu..."></textarea>
+</div>
+
+<div class="questao">
+<h2>4. Explique o que aconteceu naquele dia.</h2>
+<textarea id="q4" placeholder="Reconstrua toda a história..."></textarea>
+</div>
+
+<button type="button" id="analisarBtn">🔎 Analisar Caso</button>
+<div id="resultado"></div>
+</div>
 
 <script>
-
 /* =========================================================
    NORMALIZAÇÃO
 ========================================================= */
-
-function normalizar(texto) {
-
-    return texto
+function normalizar(texto){
+    return String(texto || "")
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[.,!?;:()[\]{}"']/g, " ")
+        .replace(/[^a-z0-9\s]/g, " ")
         .replace(/\s+/g, " ")
         .trim();
 }
 
-
-/* =========================================================
-   VERIFICA SE EXISTE ALGUMA EXPRESSÃO
-========================================================= */
-
-function contemAlguma(texto, lista) {
-
-    return lista.some(item => {
-        return texto.includes(normalizar(item));
-    });
+function contem(texto, lista){
+    return lista.some(item => normalizar(texto).includes(normalizar(item)));
 }
 
-
 /* =========================================================
-   QUESTÃO 1
+   QUESTÃO 1 — CULPADO
 ========================================================= */
+function analisarQ1(resposta){
+    const t = normalizar(resposta);
 
-function analisarQ1(resposta) {
+    const raimundo = contem(t,["raimundo"]);
+    const negacao = contem(t,[
+        "nao foi raimundo",
+        "raimundo nao matou",
+        "raimundo e inocente",
+        "raimundo nao e o assassino"
+    ]);
 
-    const texto = normalizar(resposta);
-
-    const temRaimundo =
-        contemAlguma(texto, [
-            "raimundo"
-        ]);
-
-    const negouRaimundo =
-        contemAlguma(texto, [
-            "nao foi raimundo",
-            "raimundo nao matou",
-            "raimundo e inocente",
-            "raimundo nao e o assassino"
-        ]);
-
-    if (temRaimundo && !negouRaimundo) {
-
+    if(raimundo && !negacao){
         return {
-            pontos: 25,
-
-            explicacao:
-                "Correto. Raimundo é o responsável pela morte de Antonio.",
-
-            dica:
-                "Resposta correta."
+            pontos:25,
+            explicacao:"Correto. As pistas apontam para Raimundo como o responsável pela morte de Antonio.",
+            dica:"Resposta correta."
         };
-
     }
 
     return {
-        pontos: 0,
-
-        explicacao:
-            "A resposta não identifica corretamente o responsável pela morte de Antonio.",
-
-        dica:
-            "Observe as pistas relacionadas a Raimundo."
+        pontos:0,
+        explicacao:"A resposta não identifica corretamente o responsável pela morte de Antonio.",
+        dica:"Observe principalmente as pistas relacionadas a Raimundo."
     };
 }
 
-
 /* =========================================================
-   QUESTÃO 2
+   QUESTÃO 2 — MOTIVO
+   A resposta NÃO precisa usar uma frase específica.
 ========================================================= */
+function analisarQ2(resposta){
+    const t = normalizar(resposta);
 
-function analisarQ2(resposta) {
-
-    const texto = normalizar(resposta);
-
-
-    /*
-       A pergunta é:
-       "Por que matou Antonio?"
-
-       A ideia principal é que Raimundo tinha
-       um conflito com Antonio porque Antonio
-       roubava produtos / tecidos.
-    */
-
-
-    const roubo = contemAlguma(texto, [
-
-        "roubava",
-        "roubou",
-        "roubo",
-        "roubar",
-        "roubando",
-        "furtava",
-        "furtou",
-        "furto",
-        "pegava os produtos",
-        "pegava produtos",
-        "roubava produtos",
-        "roubava os produtos",
-        "roubava tecidos",
-        "roubava os tecidos",
-        "roubo de produtos",
-        "roubo dos produtos",
-        "roubo de tecidos",
-        "roubo dos tecidos"
-
+    const roubo = contem(t,[
+        "roubava","roubou","roubo","roubar","roubando",
+        "furtava","furtou","furto","pegava os produtos",
+        "pegava produtos","produtos roubados","roubava produtos",
+        "roubava tecidos","roubava os tecidos","revendia os produtos",
+        "revendia produtos","vendia os produtos"
     ]);
 
-
-    const produtos = contemAlguma(texto, [
-
-        "produto",
-        "produtos",
-        "mercadoria",
-        "mercadorias",
-        "tecido",
-        "tecidos",
-        "empresa textil",
-        "empresa de tecidos",
+    const produtos = contem(t,[
+        "produto","produtos","mercadoria","mercadorias",
+        "tecido","tecidos","empresa textil","empresa de tecidos",
         "fabrica de tecidos"
-
     ]);
 
-
-    const rivalidade = contemAlguma(texto, [
-
-        "rival",
-        "rivalidade",
-        "concorrente",
-        "concorrencia",
-        "disputa",
-        "conflito",
-        "inimigo",
-        "briga",
-        "problema entre eles",
-        "problemas entre eles"
-
+    const rivalidade = contem(t,[
+        "rival","rivais","rivalidade","concorrente","concorrencia",
+        "disputa","conflito","inimigo","briga",
+        "problema entre eles","problemas entre eles"
     ]);
 
-
-    const dinheiro = contemAlguma(texto, [
-
-        "dinheiro",
-        "prejuizo",
-        "prejuizo financeiro",
-        "fraude",
-        "fraudes",
-        "corrupcao",
-        "lavagem de dinheiro",
-        "perda financeira"
-
+    const dinheiro = contem(t,[
+        "dinheiro","prejuizo","prejuizo financeiro","fraude",
+        "fraudes","corrupcao","lavagem de dinheiro","perdas financeiras"
     ]);
 
-
-    /*
-       Se o usuário simplesmente responder:
-
-       "porque ele roubava"
-
-       isso já responde corretamente à pergunta.
-    */
-
-    if (roubo) {
-
+    /* A ideia mais direta do caso: Antonio roubava/revendia produtos. */
+    if(roubo){
         return {
-            pontos: 25,
-
-            explicacao:
-                "Correto. Antonio roubava produtos ligados à empresa de Raimundo, criando o conflito que levou ao crime.",
-
-            dica:
-                "Resposta correta."
+            pontos:25,
+            explicacao:"Correto. O conflito estava ligado aos produtos da empresa de Raimundo que Antonio roubava ou revendia.",
+            dica:"Resposta correta."
         };
     }
 
-
-    /*
-       Outras formas de explicar o mesmo motivo.
-    */
-
-    if (produtos && rivalidade) {
-
+    /* Respostas diferentes que ainda identificam o conflito comercial. */
+    if(produtos && (rivalidade || dinheiro)){
         return {
-            pontos: 25,
-
-            explicacao:
-                "Correto. Você relacionou a rivalidade entre Raimundo e Antonio com os negócios e os produtos envolvidos no conflito.",
-
-            dica:
-                "Resposta correta."
+            pontos:25,
+            explicacao:"Correto. Você identificou o conflito envolvendo os negócios, os produtos e os interesses de Raimundo e Antonio.",
+            dica:"Resposta correta."
         };
     }
 
-
-    if (produtos && dinheiro) {
-
+    if(rivalidade || produtos || dinheiro){
         return {
-            pontos: 25,
-
-            explicacao:
-                "Você identificou o conflito comercial e financeiro relacionado aos produtos e negócios de Antonio.",
-
-            dica:
-                "Resposta correta."
+            pontos:15,
+            explicacao:"Você identificou parte do motivo, mas faltou relacionar melhor o conflito aos produtos ou negócios envolvidos.",
+            dica:"Pense no que Antonio fazia com os produtos ligados à empresa de Raimundo."
         };
     }
-
-
-    if (rivalidade || produtos || dinheiro) {
-
-        return {
-            pontos: 15,
-
-            explicacao:
-                "Você encontrou parte do motivo, mas faltou relacionar melhor o conflito entre Raimundo e Antonio.",
-
-            dica:
-                "Pense no que Antonio fazia com os produtos da empresa de Raimundo."
-        };
-    }
-
 
     return {
-        pontos: 0,
-
-        explicacao:
-            "O motivo apresentado não corresponde às principais pistas do caso.",
-
-        dica:
-            "Observe a relação de Antonio com os produtos e a empresa de Raimundo."
+        pontos:0,
+        explicacao:"O motivo apresentado não corresponde às principais pistas do caso.",
+        dica:"Observe a relação entre Raimundo, Antonio e os produtos da empresa."
     };
 }
 
-
 /* =========================================================
-   QUESTÃO 3
+   QUESTÃO 3 — DESAPARECIMENTO / FLORESTA
 ========================================================= */
+function analisarQ3(resposta){
+    const t = normalizar(resposta);
 
-function analisarQ3(resposta) {
-
-    const texto = normalizar(resposta);
-
-
-    /*
-       Parte 1:
-       Antonio fingiu a própria morte.
-    */
-
-    const falsaMorte = contemAlguma(texto, [
-
-        "fingiu sua morte",
-        "fingiu a propria morte",
-        "fingiu sua propria morte",
-        "fingiu estar morto",
-        "fingiu que morreu",
-        "fingiu que estava morto",
-        "simulou a morte",
-        "simulou sua morte",
-        "simulou a propria morte",
-        "simulou que morreu",
-        "falsa morte",
-        "propria morte"
-
+    const falsaMorte = contem(t,[
+        "fingiu sua morte","fingiu a propria morte","fingiu sua propria morte",
+        "fingiu estar morto","fingiu que morreu","fingiu que estava morto",
+        "simulou a morte","simulou sua morte","simulou a propria morte",
+        "falsa morte","fez parecer que morreu","fingiu sua morta"
     ]);
 
-
-    /*
-       Parte 2:
-       Usou a passagem secreta.
-    */
-
-    const passagem = contemAlguma(texto, [
-
-        "passagem secreta",
-        "passagem escondida",
-        "porta secreta",
-        "porta escondida",
-        "passagem",
-        "saiu pela passagem",
-        "fugiu pela passagem"
-
+    const passagem = contem(t,[
+        "passagem secreta","passagem escondida","porta secreta",
+        "porta escondida","fugiu pela passagem","fugiu pela porta",
+        "saiu pela passagem","saiu pela porta","passagem"
     ]);
 
-
-    /*
-       Parte 3:
-       Foi para a floresta.
-    */
-
-    const floresta = contemAlguma(texto, [
-
-        "floresta",
-        "cabana",
-        "bosque",
-        "mato"
-
+    const floresta = contem(t,[
+        "floresta","cabana","bosque","mato"
     ]);
 
-
-    /*
-       Parte 4:
-       Apagão / desaparecimento.
-    */
-
-    const apagao = contemAlguma(texto, [
-
-        "apagao",
-        "luzes apagaram",
-        "luzes se apagaram",
-        "luz apagou",
-        "ficou escuro",
-        "ficou tudo escuro",
-        "escuro",
-        "falta de luz",
-        "energia acabou"
-
+    const apagao = contem(t,[
+        "apagao","luzes apagaram","luzes se apagaram","luz apagou",
+        "luz apagar","ficou escuro","ficou tudo escuro","escuro",
+        "falta de luz","energia acabou"
     ]);
 
-
-    /*
-       Se a resposta contém a explicação
-       principal, vale 25.
-    */
-
-    if (falsaMorte && passagem && floresta) {
-
+    /* Forma principal e formas equivalentes. */
+    if(falsaMorte && passagem && floresta){
         return {
-            pontos: 25,
-
-            explicacao:
-                "Correto. Antonio simulou sua morte para desaparecer da mansão, utilizou a passagem secreta e seguiu em direção à floresta.",
-
-            dica:
-                "Resposta correta."
+            pontos:25,
+            explicacao:"Correto. Antonio simulou a própria morte, utilizou a passagem secreta e chegou à região da floresta.",
+            dica:"Resposta correta."
         };
     }
 
-
-    /*
-       Também aceitamos uma explicação baseada
-       na passagem e no desaparecimento.
-    */
-
-    if (passagem && floresta && apagao) {
-
+    if(passagem && floresta && apagao){
         return {
-            pontos: 25,
-
-            explicacao:
-                "Correto. O apagão permitiu o desaparecimento, e a passagem secreta explica como Antonio conseguiu sair da mansão e chegar à região da floresta.",
-
-            dica:
-                "Resposta correta."
+            pontos:25,
+            explicacao:"Correto. O apagão permitiu o desaparecimento, e a passagem secreta explica como Antonio saiu da mansão e chegou à floresta.",
+            dica:"Resposta correta."
         };
     }
 
-
-    if ((falsaMorte && passagem) ||
-        (passagem && floresta)) {
-
+    if((falsaMorte && passagem) || (passagem && floresta) || (falsaMorte && floresta)){
         return {
-            pontos: 15,
-
-            explicacao:
-                "Você encontrou uma parte importante da explicação, mas ainda falta relacionar todas as pistas.",
-
-            dica:
-                "Pense na morte falsa, na passagem secreta e no caminho até a floresta."
+            pontos:15,
+            explicacao:"Você encontrou parte importante da explicação, mas ainda falta uma ligação entre as pistas.",
+            dica:"Relacione a morte falsa, a passagem secreta e o caminho até a floresta."
         };
     }
-
 
     return {
-        pontos: 0,
-
-        explicacao:
-            "A explicação não relaciona as principais pistas sobre o desaparecimento de Antonio.",
-
-        dica:
-            "Observe a passagem secreta e o que aconteceu durante o apagão."
+        pontos:0,
+        explicacao:"A resposta ainda não relaciona as principais pistas do desaparecimento de Antonio.",
+        dica:"Observe a passagem secreta e o que aconteceu durante o apagão."
     };
 }
 
-
 /* =========================================================
-   QUESTÃO 4
+   QUESTÃO 4 — RECONSTRUÇÃO COMPLETA
+   Cada conceito vale uma parte da reconstrução.
 ========================================================= */
+function analisarQ4(resposta){
+    const t = normalizar(resposta);
 
-function analisarQ4(resposta) {
-
-    const texto = normalizar(resposta);
-
-
-    /*
-       1 — Antonio seria investigado.
-    */
-
-    const investigacao = contemAlguma(texto, [
-
-        "seria investigado",
-        "seria investigada",
-        "iriam investigar antonio",
-        "policia investigaria",
-        "investigacao policial",
-        "investigacao",
-        "policia",
-        "dia 10",
-        "10 de agosto",
-        "investigar antonio"
-
+    const investigacao = contem(t,[
+        "investigacao","policia","seria investigado","iriam investigar",
+        "investigar antonio","dia 10","10 de agosto","investigacao policial"
     ]);
 
-
-    /*
-       2 — Antonio fingiu a própria morte.
-    */
-
-    const falsaMorte = contemAlguma(texto, [
-
-        "fingiu sua morte",
-        "fingiu a propria morte",
-        "fingiu sua propria morte",
-        "fingiu estar morto",
-        "fingiu que morreu",
-        "fingiu que estava morto",
-        "simulou a morte",
-        "simulou sua morte",
-        "simulou a propria morte",
-        "simulou que morreu",
-        "falsa morte"
-
+    const falsaMorte = contem(t,[
+        "fingiu sua morte","fingiu a propria morte","fingiu sua propria morte",
+        "fingiu estar morto","fingiu que morreu","fingiu que estava morto",
+        "simulou a morte","simulou sua morte","simulou a propria morte",
+        "falsa morte","fingiu sua morta"
     ]);
 
-
-    /*
-       3 — Passagem secreta.
-    */
-
-    const passagem = contemAlguma(texto, [
-
-        "passagem secreta",
-        "passagem escondida",
-        "porta secreta",
-        "porta escondida",
-        "fugir pela passagem",
-        "fugiu pela passagem",
-        "saiu pela passagem",
-        "passagem"
-
+    const passagem = contem(t,[
+        "passagem secreta","passagem escondida","porta secreta",
+        "porta escondida","fugiu pela passagem","fugiu pela porta",
+        "saiu pela passagem","saiu pela porta","passagem"
     ]);
 
-
-    /*
-       4 — Apagão.
-    */
-
-    const apagao = contemAlguma(texto, [
-
-        "quando a luz apagar",
-        "quando as luzes apagarem",
-        "quando as luzes apagaram",
-        "quando a luz apagou",
-        "luz apagar",
-        "luzes apagaram",
-        "luzes se apagaram",
-        "apagao",
-        "ficou escuro",
-        "ficou tudo escuro",
-        "escuro",
-        "falta de luz"
-
+    const apagao = contem(t,[
+        "apagao","luzes apagaram","luzes se apagaram","luz apagou",
+        "luz apagar","ficou escuro","ficou tudo escuro","escuro",
+        "falta de luz","energia acabou"
     ]);
 
+    const floresta = contem(t,["floresta","cabana","bosque","mato"]);
 
-    /*
-       5 — Floresta.
-    */
-
-    const floresta = contemAlguma(texto, [
-
-        "floresta",
-        "cabana",
-        "bosque",
-        "mato"
-
+    const fuga = contem(t,[
+        "fugir","fuga","fugiu","fugiria","escapar","escapou",
+        "deixar a cidade","sair da cidade","ir embora","fugir da cidade"
     ]);
 
-
-    /*
-       6 — Fuga.
-    */
-
-    const fuga = contemAlguma(texto, [
-
-        "fugir",
-        "fuga",
-        "fugiria",
-        "fugiu",
-        "escapar",
-        "escaparia",
-        "escapou",
-        "deixar a cidade",
-        "sair da cidade",
-        "ir embora",
-        "fugir da cidade"
-
+    const documentos = contem(t,[
+        "documento","documentos","prova","provas","cartas",
+        "livro 9","livro nove"
     ]);
-
-
-    /*
-       7 — Documentos.
-    */
-
-    const documentos = contemAlguma(texto, [
-
-        "documento",
-        "documentos",
-        "prova",
-        "provas",
-        "cartas",
-        "livro 9",
-        "livro nove"
-
-    ]);
-
-
-    /*
-       8 — Raimundo matou Antonio.
-    */
 
     const raimundoMatou =
-
-        (
-            contemAlguma(texto, ["raimundo"]) &&
-            contemAlguma(texto, [
-                "matou",
-                "matar",
-                "assassinou",
-                "assassino",
-                "culpado",
-                "responsavel pela morte",
-                "responsavel por matar",
-                "foi o culpado"
-            ])
-        )
-
-        ||
-
-        contemAlguma(texto, [
-
-            "raimundo matou antonio",
-            "raimundo matou",
-            "raimundo assassinou antonio",
-            "raimundo assassinou",
-            "antonio foi morto por raimundo",
-            "antonio foi assassinado por raimundo",
-            "morto por raimundo",
-            "assassinado por raimundo"
-
-        ]);
-
-
-    /*
-       Junta todas as partes.
-    */
+        (contem(t,["raimundo"]) && contem(t,[
+            "matou","assassinou","assassino","culpado",
+            "responsavel pela morte","responsavel por matar","morto"
+        ]));
 
     const etapas = [
-
         investigacao,
         falsaMorte,
         passagem,
@@ -781,310 +283,132 @@ function analisarQ4(resposta) {
         fuga,
         documentos,
         raimundoMatou
-
     ];
 
+    const quantidade = etapas.filter(Boolean).length;
 
-    const quantidade =
-        etapas.filter(Boolean).length;
-
-
-    /*
-       RESPOSTA COMPLETA
-    */
-
-    if (quantidade === 8) {
-
+    if(quantidade === 8){
         return {
-            pontos: 25,
-
-            explicacao:
-                "Perfeito! Você reconstruiu toda a sequência: Antonio descobriu que seria investigado no dia 10, simulou sua morte, aproveitou o apagão, utilizou a passagem secreta, foi para a floresta tentando fugir da cidade com os documentos e acabou sendo morto por Raimundo.",
-
-            dica:
-                "Caso completamente solucionado."
+            pontos:25,
+            explicacao:"Perfeito! Você reconstruiu a sequência principal: Antonio descobriu que seria investigado, simulou sua morte, aproveitou o apagão, utilizou a passagem secreta, foi para a floresta tentando fugir com os documentos e acabou sendo morto por Raimundo.",
+            dica:"Caso completamente solucionado."
         };
     }
 
-
-    /*
-       Quase completa.
-    */
-
-    if (quantidade >= 6) {
-
+    if(quantidade >= 6){
         return {
-            pontos: 20,
-
-            explicacao:
-                "Sua reconstrução está quase completa. Você encontrou a maior parte das pistas, mas ainda faltam uma ou duas conexões importantes.",
-
-            dica:
-                "Revise a sequência desde a investigação policial até o encontro com Raimundo."
+            pontos:20,
+            explicacao:"Sua reconstrução está quase completa. Você encontrou a maior parte das pistas, mas faltam uma ou duas conexões importantes.",
+            dica:"Revise a sequência desde a investigação até o encontro com Raimundo na floresta."
         };
     }
 
-
-    /*
-       Parcial.
-    */
-
-    if (quantidade >= 4) {
-
+    if(quantidade >= 4){
         return {
-            pontos: 15,
-
-            explicacao:
-                "Você encontrou várias pistas importantes, mas ainda não conectou toda a sequência dos acontecimentos.",
-
-            dica:
-                "Relacione a investigação, a falsa morte, a passagem secreta, o apagão, a fuga e Raimundo."
+            pontos:15,
+            explicacao:"Você encontrou várias pistas importantes, mas ainda não conectou toda a sequência dos acontecimentos.",
+            dica:"Relacione a investigação, a falsa morte, a passagem, o apagão, a fuga e Raimundo."
         };
     }
-
 
     return {
-        pontos: 0,
-
-        explicacao:
-            "A reconstrução ainda não apresenta elementos suficientes para explicar o que aconteceu naquele dia.",
-
-        dica:
-            "Tente reconstruir os acontecimentos em ordem."
+        pontos:0,
+        explicacao:"A reconstrução ainda não apresenta elementos suficientes para explicar o que aconteceu naquele dia.",
+        dica:"Tente reconstruir os acontecimentos em ordem."
     };
 }
 
-
 /* =========================================================
-   VERIFICAR AS 4 QUESTÕES
+   RESULTADOS
 ========================================================= */
-
-function verificar() {
-
-    const resposta1 =
-        document.getElementById("q1").value;
-
-    const resposta2 =
-        document.getElementById("q2").value;
-
-    const resposta3 =
-        document.getElementById("q3").value;
-
-    const resposta4 =
-        document.getElementById("q4").value;
-
-
-    /*
-       Analisa cada resposta.
-    */
-
-    const resultado1 =
-        analisarQ1(resposta1);
-
-    const resultado2 =
-        analisarQ2(resposta2);
-
-    const resultado3 =
-        analisarQ3(resposta3);
-
-    const resultado4 =
-        analisarQ4(resposta4);
-
-
-    /*
-       Soma.
-    */
-
-    const total =
-        resultado1.pontos +
-        resultado2.pontos +
-        resultado3.pontos +
-        resultado4.pontos;
-
-
-    /*
-       Monta o resultado.
-    */
-
-    let html = "";
-
-
-    html += criarResultado(
-        1,
-        resultado1
-    );
-
-
-    html += criarResultado(
-        2,
-        resultado2
-    );
-
-
-    html += criarResultado(
-        3,
-        resultado3
-    );
-
-
-    html += criarResultado(
-        4,
-        resultado4
-    );
-
-
-    html += `
-        <div class="nota-final">
-            Resultado final: ${total}/100
-        </div>
-    `;
-
-
-    /*
-       Caso perfeito.
-    */
-
-    if (total === 100) {
-
-        html += `
-            <div class="sucesso">
-                🎉 Caso totalmente resolvido! Detetive perfeito.
-            </div>
-        `;
-
-    } else {
-
-        html += `
-            <div class="sucesso">
-                🔎 Continue investigando as pistas.
-            </div>
-        `;
-    }
-
-
-    document.getElementById("resultado").innerHTML =
-        html;
-
-
-    /*
-       Comemoração.
-    */
-
-    if (total === 100) {
-
-        tocarSom();
-
-        soltarConfetes();
-
-
-        setTimeout(() => {
-
-            window.open(
-                "./resultado.png",
-                "_blank"
-            );
-
-        }, 3500);
-    }
-}
-
-
-/* =========================================================
-   CRIAR CAIXA DE RESULTADO
-========================================================= */
-
-function criarResultado(numero, resultado) {
-
+function criarResultado(numero, analise){
     return `
         <div class="resultado-box">
-
-            <h3>
-                Questão ${numero}: ${resultado.pontos}/25
-            </h3>
-
-            <div class="explicacao">
-                ${resultado.explicacao}
-            </div>
-
-            <div class="dica">
-                💡 ${resultado.dica}
-            </div>
-
-        </div>
-    `;
+            <h3>Questão ${numero}: ${analise.pontos}/25</h3>
+            <div class="explicacao">${analise.explicacao}</div>
+            <div class="dica">💡 ${analise.dica}</div>
+        </div>`;
 }
 
+function verificar(){
+    const r1 = analisarQ1(document.getElementById("q1").value);
+    const r2 = analisarQ2(document.getElementById("q2").value);
+    const r3 = analisarQ3(document.getElementById("q3").value);
+    const r4 = analisarQ4(document.getElementById("q4").value);
+
+    const total = r1.pontos + r2.pontos + r3.pontos + r4.pontos;
+
+    let html = "";
+    html += criarResultado(1,r1);
+    html += criarResultado(2,r2);
+    html += criarResultado(3,r3);
+    html += criarResultado(4,r4);
+    html += `<div class="nota-final">Pontuação final: ${total}/100</div>`;
+
+    if(total === 100){
+        html += `<div class="sucesso">🎉 <strong>Caso solucionado!</strong><br>Você conectou todas as principais pistas.</div>`;
+    }
+
+    document.getElementById("resultado").innerHTML = html;
+
+    if(total === 100){
+        tocarSom();
+        soltarConfetes();
+        setTimeout(() => {
+            window.open("./resultado.png","_blank");
+        },3500);
+    }
+}
 
 /* =========================================================
-   SOM
+   SOM DE APLAUSOS — GERADO PELO PRÓPRIO CÓDIGO
 ========================================================= */
+function tocarSom(){
+    try{
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if(!AudioContext) return;
+        const ctx = new AudioContext();
+        const agora = ctx.currentTime;
 
-function tocarSom() {
-
-    const audio = new Audio(
-        "https://www.soundjay.com/human/applause-8.mp3"
-    );
-
-    audio.volume = 0.7;
-
-
-    audio.play().catch(() => {
-
-        console.log(
-            "O navegador bloqueou a reprodução automática do som."
-        );
-
-    });
+        for(let i=0;i<55;i++){
+            const inicio = agora + Math.random()*1.8;
+            const duracao = 0.035 + Math.random()*0.06;
+            const osc = ctx.createOscillator();
+            const ganho = ctx.createGain();
+            osc.type = "square";
+            osc.frequency.value = 500 + Math.random()*1000;
+            ganho.gain.setValueAtTime(0.0001,inicio);
+            ganho.gain.exponentialRampToValueAtTime(0.08,inicio+0.005);
+            ganho.gain.exponentialRampToValueAtTime(0.0001,inicio+duracao);
+            osc.connect(ganho);
+            ganho.connect(ctx.destination);
+            osc.start(inicio);
+            osc.stop(inicio+duracao);
+        }
+        setTimeout(()=>ctx.close(),2500);
+    }catch(e){
+        console.log("Não foi possível tocar o som:",e);
+    }
 }
-
 
 /* =========================================================
    CONFETES
 ========================================================= */
-
-function soltarConfetes() {
-
+function soltarConfetes(){
     const quantidade = 120;
-
-
-    for (let i = 0; i < quantidade; i++) {
-
-        const confete =
-            document.createElement("div");
-
-
-        confete.className =
-            "confete";
-
-
-        confete.style.left =
-            Math.random() * 100 + "vw";
-
-
-        confete.style.animationDuration =
-            (2 + Math.random() * 2) + "s";
-
-
-        confete.style.background =
-            `hsl(${Math.random() * 360}, 100%, 50%)`;
-
-
-        confete.style.transform =
-            `rotate(${Math.random() * 360}deg)`;
-
-
+    for(let i=0;i<quantidade;i++){
+        const confete = document.createElement("div");
+        confete.className = "confete";
+        confete.style.left = Math.random()*100 + "vw";
+        confete.style.animationDuration = (2 + Math.random()*2) + "s";
+        confete.style.background = `hsl(${Math.random()*360},100%,50%)`;
+        confete.style.transform = `rotate(${Math.random()*360}deg)`;
         document.body.appendChild(confete);
-
-
-        setTimeout(() => {
-
-            confete.remove();
-
-        }, 4000);
+        setTimeout(()=>confete.remove(),4500);
     }
 }
 
+document.getElementById("analisarBtn").addEventListener("click",verificar);
 </script>
-
 </body>
 </html>
