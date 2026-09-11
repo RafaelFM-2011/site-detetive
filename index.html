@@ -1,637 +1,913 @@
-
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Quiz Investigativo</title>
+    <title>Quiz Investigativo</title>
 
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #111;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-  }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-  h1 {
-    margin-bottom: 30px;
-  }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #eee;
+        }
 
-  .box {
-    background: #1e1e1e;
-    padding: 20px;
-    margin: 18px auto;
-    width: 80%;
-    max-width: 900px;
-    border-radius: 10px;
-    text-align: left;
-    box-shadow: 0 0 10px rgba(0,0,0,0.4);
-  }
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+            background: #1b1b1b;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.7);
+        }
 
-  .box p {
-    font-size: 18px;
-  }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
 
-  input {
-    width: 95%;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 6px;
-    border: none;
-    font-size: 16px;
-    box-sizing: border-box;
-  }
+        .subtitulo {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
 
-  button {
-    padding: 14px 25px;
-    margin-top: 20px;
-    cursor: pointer;
-    border: none;
-    background: #00c853;
-    color: white;
-    font-weight: bold;
-    border-radius: 8px;
-    font-size: 16px;
-  }
+        .pergunta {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #242424;
+            border-radius: 10px;
+        }
 
-  button:hover {
-    background: #00a844;
-  }
+        .pergunta h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
 
-  #score {
-    font-size: 24px;
-    margin-top: 25px;
-    color: #ffd700;
-  }
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #555;
+            background: #111;
+            color: white;
+            font-size: 16px;
+        }
 
-  #resultado {
-    margin: 20px auto;
-    width: 80%;
-    max-width: 900px;
-    font-size: 18px;
-    white-space: pre-line;
-  }
+        textarea:focus {
+            outline: none;
+            border-color: #888;
+        }
 
-  .analise {
-    margin-top: 15px;
-    padding: 15px;
-    background: #292929;
-    border-left: 4px solid #777;
-    border-radius: 5px;
-    font-size: 15px;
-    line-height: 1.5;
-  }
+        button {
+            display: block;
+            margin: 30px auto 10px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #eee;
+            color: #111;
+        }
 
-  .certo {
-    border-left-color: #00c853;
-  }
+        button:hover {
+            background: #ccc;
+        }
 
-  .parcial {
-    border-left-color: #ffd600;
-  }
+        #resultado {
+            margin-top: 30px;
+        }
 
-  .errado {
-    border-left-color: #d50000;
-  }
+        .analise {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #292929;
+            border-left: 5px solid #777;
+        }
 
-  .titulo-analise {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
+        .analise h3 {
+            margin-top: 0;
+        }
 
-  .detetive {
-    margin-top: 20px;
-    font-size: 20px;
-  }
-</style>
+        .dica {
+            margin-top: 10px;
+            color: #bbb;
+            font-size: 14px;
+        }
+
+        .nota {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .perfeito {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 
 <body>
 
-<h1>🕵️ Quiz Investigativo</h1>
+<div class="container">
 
-<div class="box">
-  <p><strong>1. Quem matou Antonio?</strong></p>
-  <input id="q1" placeholder="Digite sua conclusão...">
+    <h1>🕵️ Quiz Investigativo</h1>
+
+    <p class="subtitulo">
+        Analise as pistas e descubra o que realmente aconteceu.
+    </p>
+
+    <div class="pergunta">
+        <h2>1. Quem matou Antonio?</h2>
+        <textarea id="resposta1" placeholder="Digite sua resposta..."></textarea>
+    </div>
+
+    <div class="pergunta">
+        <h2>2. Por que matou Antonio?</h2>
+        <textarea id="resposta2" placeholder="Digite sua resposta..."></textarea>
+    </div>
+
+    <div class="pergunta">
+        <h2>3. Como o corpo apareceu novamente na floresta?</h2>
+        <textarea id="resposta3" placeholder="Digite sua resposta..."></textarea>
+    </div>
+
+    <div class="pergunta">
+        <h2>4. Explique o que aconteceu naquele dia.</h2>
+        <textarea id="resposta4" placeholder="Explique sua teoria completa..."></textarea>
+    </div>
+
+    <button type="button" onclick="verificar()">
+        🔎 Analisar Caso
+    </button>
+
+    <div id="resultado"></div>
+
 </div>
-
-<div class="box">
-  <p><strong>2. Por que Antonio foi morto?</strong></p>
-  <input id="q2" placeholder="Explique o possível motivo...">
-</div>
-
-<div class="box">
-  <p><strong>3. O que explica o desaparecimento do corpo e sua aparição posterior na floresta?</strong></p>
-  <input id="q3" placeholder="Explique sua teoria...">
-</div>
-
-<div class="box">
-  <p><strong>4. Reconstitua o que aconteceu naquela madrugada.</strong></p>
-  <input id="q4" placeholder="Apresente sua teoria completa...">
-</div>
-
-<button onclick="verificar()">🔎 Analisar caso</button>
-
-<div id="score"></div>
-<div id="resultado"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
 
-/* =========================================================
-   NORMALIZAÇÃO
-   ========================================================= */
+    // =========================================================
+    // NORMALIZAÇÃO
+    // =========================================================
 
-function normalizar(texto) {
-
-  return texto
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^\w\s]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-}
-
-
-/* =========================================================
-   VERIFICA SE UMA IDEIA ESTÁ PRESENTE
-   ========================================================= */
-
-function contemAlguma(texto, palavras) {
-
-  return palavras.some(palavra =>
-    texto.includes(normalizar(palavra))
-  );
-
-}
-
-
-/* =========================================================
-   VERIFICA SE O JOGADOR NEGOU UMA IDEIA
-   Evita coisas como:
-   "Raimundo não matou Antonio"
-   serem consideradas corretas só porque possuem "Raimundo".
-   ========================================================= */
-
-function negou(texto, palavras) {
-
-  for (let palavra of palavras) {
-
-    let p = normalizar(palavra);
-
-    let posicao = texto.indexOf(p);
-
-    if (posicao !== -1) {
-
-      let antes = texto.substring(
-        Math.max(0, posicao - 25),
-        posicao
-      );
-
-      if (
-        antes.includes("nao") ||
-        antes.includes("nunca") ||
-        antes.includes("jamais") ||
-        antes.includes("inocente")
-      ) {
-        return true;
-      }
+    function normalizar(texto) {
+        return texto
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[.,!?;:()"']/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
     }
-  }
-
-  return false;
-}
 
 
-/* =========================================================
-   RESULTADO DE CADA QUESTÃO
-   ========================================================= */
+    // =========================================================
+    // VERIFICA SE EXISTE ALGUMA PALAVRA
+    // =========================================================
 
-function analisarPergunta(numero, resposta) {
+    function contemAlguma(texto, palavras) {
 
-  let texto = normalizar(resposta);
-
-  if (texto.length < 3) {
-
-    return {
-      pontos: 0,
-      classe: "errado",
-      titulo: "⚠️ Resposta insuficiente",
-      mensagem:
-        "Não há informações suficientes para analisar sua conclusão."
-    };
-
-  }
-
-
-  /* =======================================================
-     PERGUNTA 1
-     ======================================================= */
-
-  if (numero === 1) {
-
-    let raimundo =
-      contemAlguma(texto, [
-        "raimundo"
-      ]);
-
-    let negacao =
-      negou(texto, [
-        "raimundo"
-      ]);
-
-    if (raimundo && !negacao) {
-
-      return {
-        pontos: 25,
-        classe: "certo",
-        titulo: "✓ Suspeito identificado",
-        mensagem:
-          "Sua conclusão aponta para o suspeito correto. " +
-          "Entretanto, identificar o responsável não significa que todas as circunstâncias do crime tenham sido explicadas."
-      };
+        return palavras.some(function(palavra) {
+            return texto.includes(normalizar(palavra));
+        });
 
     }
 
-    return {
-      pontos: 0,
-      classe: "errado",
-      titulo: "✗ Conclusão incompatível",
-      mensagem:
-        "A pessoa que você apontou não explica satisfatoriamente todas as evidências encontradas durante a investigação. " +
-        "Reavalie principalmente as pistas que pareciam incriminar alguém de forma muito óbvia."
-    };
 
-  }
+    // =========================================================
+    // ANALISA CADA PERGUNTA
+    // =========================================================
+
+    function analisarPergunta(numero, resposta) {
+
+        const texto = normalizar(resposta);
 
 
-  /* =======================================================
-     PERGUNTA 2
-     ======================================================= */
+        // =====================================================
+        // PERGUNTA 1
+        // =====================================================
 
- if (numero === 2) {
-    const motivos = [
-        "rival",
-        "rivalidade",
-        "concorrente",
-        "concorrência",
-        "empresa",
-        "tecido",
-        "tecidos",
-        "têxtil",
-        "textil",
-        "produto",
-        "produtos",
-        "roubar",
-        "roubava",
-        "roubou",
-        "roubo",
-        "roubando",
-        "roubado",
-        "vendia",
-        "revendia",
-        "revender",
-        "prejudicar",
-        "prejuízo",
-        "vingança",
-        "conflito",
-        "disputa"
-    ];
+        if (numero === 1) {
 
-    const encontrouMotivo = motivos.some(
-        palavra => texto.includes(normalizar(palavra))
-    );
+            const acertou = contemAlguma(texto, [
+                "raimundo"
+            ]);
 
-    const negacao = [
-        "nao foi",
-        "nao matou",
-        "sem motivo",
-        "nenhum motivo",
-        "nao sei"
-    ].some(frase => texto.includes(normalizar(frase)));
+            if (acertou) {
 
-    if (encontrouMotivo && !negacao) {
-        return {
-            pontos: 25,
-            explicacao: "Correto! Raimundo tinha um conflito com Antonio relacionado à empresa têxtil e às acusações de que Antonio roubava ou revendia produtos.",
-            dica: "A pista principal está na relação entre Raimundo, Antonio e a empresa têxtil."
-        };
-    }
+                return {
+                    pontos: 25,
+                    explicacao:
+                        "Correto. Raimundo é apontado pelas pistas como o responsável pela morte de Antonio.",
+                    dica:
+                        "As roupas de Raimundo, sua presença na floresta e seu comportamento levantam fortes suspeitas."
+                };
 
-    return {
-        pontos: 0,
-        explicacao: "A resposta não apresenta claramente o principal motivo da morte.",
-        dica: "Observe as pistas envolvendo Raimundo, a empresa têxtil e os produtos de Antonio."
-    };
-}
+            }
 
-  /* =======================================================
-     PERGUNTA 3
-     ======================================================= */
-
-  if (numero === 3) {
-
-    let desaparecimento =
-      contemAlguma(texto, [
-        "desapareceu",
-        "desaparecimento",
-        "tiraram",
-        "levaram",
-        "retiraram",
-        "corpo"
-      ]);
-
-    let passagem =
-      contemAlguma(texto, [
-        "passagem secreta",
-        "porta secreta",
-        "biblioteca",
-        "escritorio"
-      ]);
-
-    let floresta =
-      contemAlguma(texto, [
-        "floresta",
-        "cabana",
-        "lago"
-      ]);
-
-    let livro =
-      contemAlguma(texto, [
-        "livro 9",
-        "livro",
-        "documentos",
-        "passagem"
-      ]);
-
-    let pontos = 0;
-
-    if (desaparecimento) pontos += 5;
-    if (passagem) pontos += 8;
-    if (floresta) pontos += 5;
-    if (livro) pontos += 7;
-
-
-    if (pontos >= 18) {
-
-      return {
-        pontos: 25,
-        classe: "certo",
-        titulo: "✓ Boa reconstrução",
-        mensagem:
-          "Sua teoria relaciona corretamente vários elementos da cena. " +
-          "Você percebeu que o desaparecimento não pode ser analisado isoladamente do escritório, da biblioteca e do que foi encontrado posteriormente."
-      };
-
-    }
-
-    if (pontos >= 10) {
-
-      return {
-        pontos: 15,
-        classe: "parcial",
-        titulo: "⚠️ Há uma parte importante faltando",
-        mensagem:
-          "Sua teoria explica parte do acontecimento, mas ainda existe uma conexão importante entre dois locais da mansão que você não considerou completamente."
-      };
-
-    }
-
-    return {
-      pontos: 0,
-      classe: "errado",
-      titulo: "✗ A teoria não explica o desaparecimento",
-      mensagem:
-        "Sua explicação não consegue relacionar suficientemente o desaparecimento do corpo com as evidências encontradas na mansão. " +
-        "Reexamine a relação entre o escritório e a biblioteca."
-    };
-
-  }
-
-
-  /* =======================================================
-     PERGUNTA 4
-     ======================================================= */
-
-  if (numero === 4) {
-    const etapas = [
-        {
-            palavras: ["investig", "policia", "polícia", "dia 10"],
-            nome: "investigação"
-        },
-        {
-            palavras: ["fingiu", "simulou", "fingir", "simular", "morte falsa"],
-            nome: "fingiu a própria morte"
-        },
-        {
-            palavras: ["passagem secreta", "porta secreta", "passagem", "porta escondida"],
-            nome: "passagem secreta"
-        },
-        {
-            palavras: ["luz apagou", "luzes apagaram", "apagao", "apagão", "escuro", "luz"],
-            nome: "apagão"
-        },
-        {
-            palavras: ["floresta", "florest", "mata", "cabana"],
-            nome: "floresta"
-        },
-        {
-            palavras: ["fugir", "fuga", "escapar", "escapou", "sair da cidade"],
-            nome: "tentativa de fuga"
-        },
-        {
-            palavras: ["documento", "documentos", "cartas", "carta"],
-            nome: "documentos"
-        },
-        {
-            palavras: ["raimundo matou", "raimundo o matou", "morto por raimundo", "morto pelo raimundo"],
-            nome: "Raimundo matou Antonio"
+            return {
+                pontos: 0,
+                explicacao:
+                    "Essa resposta não corresponde ao principal suspeito indicado pelas pistas.",
+                dica:
+                    "Observe principalmente as pistas envolvendo Raimundo e sua relação com Antonio."
+            };
         }
-    ];
 
-    let pontos = 0;
-    let encontrados = [];
 
-    etapas.forEach(etapa => {
-        const encontrou = etapa.palavras.some(
-            palavra => texto.includes(normalizar(palavra))
-        );
+        // =====================================================
+        // PERGUNTA 2
+        // =====================================================
 
-        if (encontrou) {
-            pontos++;
-            encontrados.push(etapa.nome);
+        if (numero === 2) {
+
+            let pontos = 0;
+
+            // Relação entre os dois
+            if (contemAlguma(texto, [
+                "rival",
+                "rivalidade",
+                "concorrente",
+                "concorrencia",
+                "disputa",
+                "conflito"
+            ])) {
+                pontos += 1;
+            }
+
+            // Empresa têxtil
+            if (contemAlguma(texto, [
+                "textil",
+                "tecido",
+                "tecidos",
+                "empresa textil"
+            ])) {
+                pontos += 1;
+            }
+
+            // Roubo de produtos
+            if (contemAlguma(texto, [
+                "roubo",
+                "roubar",
+                "roubava",
+                "roubou",
+                "roubando",
+                "produtos",
+                "produto",
+                "revendia",
+                "revender"
+            ])) {
+                pontos += 1;
+            }
+
+            // Prejuízo / vingança
+            if (contemAlguma(texto, [
+                "vinganca",
+                "vingar",
+                "prejudicar",
+                "prejuizo",
+                "dinheiro",
+                "fraude"
+            ])) {
+                pontos += 1;
+            }
+
+
+            if (pontos >= 2) {
+
+                return {
+                    pontos: 25,
+                    explicacao:
+                        "Correto. O conflito entre Raimundo e Antonio estava ligado aos negócios, à empresa têxtil e às acusações de que Antonio roubava ou revendia produtos.",
+                    dica:
+                        "Você identificou o motivo principal."
+                };
+
+            }
+
+
+            if (pontos === 1) {
+
+                return {
+                    pontos: 15,
+                    explicacao:
+                        "Você encontrou uma parte do motivo, mas faltou relacionar melhor Raimundo, Antonio e o conflito envolvendo os negócios.",
+                    dica:
+                        "Tente explicar por que o conflito entre os dois poderia ter levado Raimundo a querer se vingar."
+                };
+
+            }
+
+
+            return {
+                pontos: 0,
+                explicacao:
+                    "A resposta não apresenta claramente o motivo principal.",
+                dica:
+                    "Observe as pistas sobre Raimundo, a empresa têxtil e os produtos que Antonio estaria roubando ou revendendo."
+            };
+
         }
-    });
-
-    // 8 etapas possíveis = 100%
-    const porcentagem = Math.round((pontos / etapas.length) * 100);
-
-    if (porcentagem >= 100) {
-        return {
-            pontos: 25,
-            explicacao: "Excelente! Você reconstruiu toda a sequência: Antonio seria investigado, fingiu a própria morte, aproveitou o apagão para usar a passagem secreta, seguiu para a floresta e tentou fugir com os documentos, mas acabou sendo morto por Raimundo.",
-            dica: "Você encontrou todas as principais pistas."
-        };
-    }
-
-    if (porcentagem >= 75) {
-        return {
-            pontos: 20,
-            explicacao: "Sua teoria está muito próxima. Você encontrou várias etapas importantes, mas ainda falta uma parte da sequência dos acontecimentos.",
-            dica: "Tente relacionar a investigação do dia 10, a passagem secreta, o apagão, a floresta, os documentos e Raimundo."
-        };
-    }
-
-    if (porcentagem >= 50) {
-        return {
-            pontos: 15,
-            explicacao: "Você identificou parte importante do que aconteceu, mas sua explicação ainda deixou acontecimentos importantes de fora.",
-            dica: "Procure conectar as pistas em uma sequência de acontecimentos."
-        };
-    }
-
-    return {
-        pontos: 0,
-        explicacao: "Sua explicação ainda não reúne pistas suficientes para reconstruir o que aconteceu naquele dia.",
-        dica: "Observe a passagem secreta, o apagão, a floresta e as pistas relacionadas a Raimundo."
-    };
-}
 
 
-/* =========================================================
-   ANALISAR CASO
-   ========================================================= */
+        // =====================================================
+        // PERGUNTA 3
+        // =====================================================
 
-function verificar() {
+        if (numero === 3) {
 
-  let respostas = [
-    document.getElementById("q1").value,
-    document.getElementById("q2").value,
-    document.getElementById("q3").value,
-    document.getElementById("q4").value
-  ];
-
-  let total = 0;
-  let analises = "";
+            let pontos = 0;
 
 
-  respostas.forEach((resposta, index) => {
-
-    let resultado = analisarPergunta(
-      index + 1,
-      resposta
-    );
-
-    total += resultado.pontos;
-
-    analises += `
-      <div class="analise ${resultado.classe}">
-        <div class="titulo-analise">
-          Pergunta ${index + 1}: ${resultado.titulo}
-        </div>
-
-        ${resultado.mensagem}
-      </div>
-    `;
-
-  });
+            if (contemAlguma(texto, [
+                "corpo",
+                "desapareceu",
+                "desaparecimento",
+                "sumiu"
+            ])) {
+                pontos++;
+            }
 
 
-  document.getElementById("score").innerText =
-    "Ranking de Detetive: " + total + "%";
+            if (contemAlguma(texto, [
+                "passagem secreta",
+                "porta secreta",
+                "passagem",
+                "porta escondida"
+            ])) {
+                pontos++;
+            }
 
 
-  let classificacao = "";
-
-  if (total === 100) {
-
-    classificacao =
-      "🕵️ Detetive excepcional. Você conseguiu reconstruir o caso.";
-
-  } else if (total >= 75) {
-
-    classificacao =
-      "🔎 Excelente investigação. Algumas peças ainda precisam ser encaixadas.";
-
-  } else if (total >= 50) {
-
-    classificacao =
-      "🧐 Bom trabalho. Você encontrou pistas importantes, mas ainda existem contradições.";
-
-  } else if (total >= 25) {
-
-    classificacao =
-      "📋 Você encontrou algumas pistas, mas a investigação ainda está longe de ser concluída.";
-
-  } else {
-
-    classificacao =
-      "🔍 A investigação ainda precisa avançar. Volte às evidências antes de tirar uma conclusão.";
-
-  }
+            if (contemAlguma(texto, [
+                "escritorio",
+                "escritório",
+                "biblioteca",
+                "biblioteca"
+            ])) {
+                pontos++;
+            }
 
 
-  document.getElementById("resultado").innerHTML =
-    `<div class="detetive">${classificacao}</div>` +
-    analises;
+            if (contemAlguma(texto, [
+                "floresta",
+                "florest",
+                "mata",
+                "lago",
+                "cabana"
+            ])) {
+                pontos++;
+            }
 
 
-  /* =======================================================
-     FINAL PERFEITO
-     ======================================================= */
-
-  if (total === 100) {
-
-    let audio =
-      new Audio(
-        "https://www.soundjay.com/human/applause-8.mp3"
-      );
-
-    audio.play().catch(() => {});
+            if (contemAlguma(texto, [
+                "livro 9",
+                "livro nove",
+                "documentos",
+                "documentos escondidos"
+            ])) {
+                pontos++;
+            }
 
 
-    let end = Date.now() + 3000;
+            if (pontos >= 4) {
 
-    (function frame() {
+                return {
+                    pontos: 25,
+                    explicacao:
+                        "Muito bem. Você relacionou o desaparecimento do corpo, a passagem secreta, a biblioteca e as pistas que levam até a floresta.",
+                    dica:
+                        "Você encontrou praticamente todas as pistas importantes."
+                };
 
-      confetti({
-        particleCount: 6,
-        spread: 90,
-        origin: {
-          y: 0.6
+            }
+
+
+            if (pontos >= 2) {
+
+                return {
+                    pontos: 15,
+                    explicacao:
+                        "Você encontrou algumas pistas importantes, mas ainda faltam elementos para explicar completamente o desaparecimento e reaparecimento do corpo.",
+                    dica:
+                        "Observe a passagem secreta, o livro 9 e a ligação com a floresta."
+                };
+
+            }
+
+
+            return {
+                pontos: 0,
+                explicacao:
+                    "A resposta ainda não relaciona pistas suficientes para explicar o que aconteceu com o corpo.",
+                dica:
+                    "Procure relacionar a passagem secreta, a biblioteca, o livro 9 e a floresta."
+            };
+
         }
-      });
-
-      if (Date.now() < end) {
-
-        requestAnimationFrame(frame);
-
-      }
-
-    })();
 
 
-    setTimeout(() => {
+        // =====================================================
+        // PERGUNTA 4
+        // =====================================================
 
-      window.open(
-        "./resultado.png",
-        "_blank"
-      );
+        if (numero === 4) {
 
-    }, 3500);
+            /*
+             * A pergunta 4 é a mais difícil.
+             *
+             * Em vez de procurar apenas uma palavra,
+             * analisamos várias partes da teoria.
+             */
 
-  }
+            let etapasEncontradas = 0;
 
-}
+
+            // 1 — Antonio seria investigado
+            if (contemAlguma(texto, [
+                "investigado",
+                "investigacao",
+                "investigação",
+                "policia",
+                "polícia",
+                "dia 10"
+            ])) {
+                etapasEncontradas++;
+            }
+
+
+            // 2 — Antonio fingiu a própria morte
+            if (contemAlguma(texto, [
+                "fingiu sua morte",
+                "fingiu a propria morte",
+                "fingiu a própria morte",
+                "fingiu morte",
+                "simulou sua morte",
+                "simulou a propria morte",
+                "simulou a própria morte",
+                "morte falsa",
+                "fingir a morte"
+            ])) {
+                etapasEncontradas++;
+            }
+
+
+            // 3 — Passagem secreta
+            if (contemAlguma(texto, [
+                "passagem secreta",
+                "porta secreta",
+                "passagem escondida",
+                "porta escondida"
+            ])) {
+                etapasEncontradas++;
+            }
+
+
+            // 4 — Apagão
+            if (contemAlguma(texto, [
+                "apagao",
+                "apagão",
+                "luz apagou",
+                "luzes apagaram",
+                "luz apagada",
+                "ficou escuro",
+                "escuro"
+            ])) {
+                etapasEncontradas++;
+            }
+
+
+            // 5 — Floresta
+            if (contemAlguma(texto, [
+                "floresta",
+                "florest",
+                "mata",
+                "cabana"
+            ])) {
+                etapasEncontradas++;
+            }
+
+
+            // 6 — Tentativa de fuga
+            if (contemAlguma(texto, [
+                "fugir",
+                "fuga",
+                "escapar",
+                "escapou",
+                "sair da cidade",
+                "deixar a cidade"
+            ])) {
+                etapasEncontradas++;
+            }
+
+
+            // 7 — Documentos
+            if (contemAlguma(texto, [
+                "documento",
+                "documentos",
+                "cartas",
+                "carta"
+            ])) {
+                etapasEncontradas++;
+            }
+
+
+            // 8 — Raimundo matou Antonio
+            if (
+                texto.includes("raimundo matou") ||
+                texto.includes("morto por raimundo") ||
+                texto.includes("morto pelo raimundo") ||
+                texto.includes("raimundo o matou") ||
+                (
+                    texto.includes("raimundo") &&
+                    texto.includes("matou")
+                )
+            ) {
+                etapasEncontradas++;
+            }
+
+
+            // =================================================
+            // CALCULA A PORCENTAGEM
+            // =================================================
+
+            const porcentagem = Math.round(
+                (etapasEncontradas / 8) * 100
+            );
+
+
+            // =================================================
+            // 100%
+            // =================================================
+
+            if (porcentagem === 100) {
+
+                return {
+                    pontos: 25,
+                    explicacao:
+                        "Excelente! Sua reconstrução reúne todas as principais etapas: Antonio seria investigado no dia 10, fingiu a própria morte, utilizou a passagem secreta durante o apagão, seguiu para a floresta tentando fugir da cidade com os documentos e acabou sendo morto por Raimundo.",
+                    dica:
+                        "Você conseguiu reconstruir toda a sequência dos acontecimentos."
+                };
+
+            }
+
+
+            // =================================================
+            // 75% OU MAIS
+            // =================================================
+
+            if (porcentagem >= 75) {
+
+                return {
+                    pontos: 20,
+                    explicacao:
+                        "Sua teoria está muito próxima da solução. Você encontrou a maior parte das etapas, mas deixou alguns acontecimentos importantes de fora.",
+                    dica:
+                        "Tente conectar a investigação, a falsa morte, a passagem secreta, o apagão, a floresta, os documentos e Raimundo."
+                };
+
+            }
+
+
+            // =================================================
+            // 50% OU MAIS
+            // =================================================
+
+            if (porcentagem >= 50) {
+
+                return {
+                    pontos: 15,
+                    explicacao:
+                        "Você encontrou várias pistas importantes, mas sua reconstrução ainda está incompleta.",
+                    dica:
+                        "Tente organizar as pistas como uma sequência de acontecimentos."
+                };
+
+            }
+
+
+            // =================================================
+            // MENOS DE 50%
+            // =================================================
+
+            return {
+                pontos: 0,
+                explicacao:
+                    "Sua explicação ainda não reúne pistas suficientes para reconstruir o que aconteceu.",
+                dica:
+                    "Observe a investigação do dia 10, a passagem secreta, o apagão, a floresta, os documentos e Raimundo."
+            };
+
+        }
+
+
+        // Caso o número da pergunta esteja errado
+        return {
+            pontos: 0,
+            explicacao: "Não foi possível analisar esta pergunta.",
+            dica: "Tente novamente."
+        };
+
+    }
+
+
+    // =========================================================
+    // ANALISAR CASO
+    // =========================================================
+
+    function verificar() {
+
+        try {
+
+            const respostas = [
+                document.getElementById("resposta1").value,
+                document.getElementById("resposta2").value,
+                document.getElementById("resposta3").value,
+                document.getElementById("resposta4").value
+            ];
+
+
+            let total = 0;
+
+            let html = "";
+
+
+            for (let i = 0; i < respostas.length; i++) {
+
+                const analise = analisarPergunta(
+                    i + 1,
+                    respostas[i]
+                );
+
+
+                // Segurança contra undefined
+                const explicacao =
+                    analise.explicacao ||
+                    "Não foi possível gerar uma explicação.";
+
+                const dica =
+                    analise.dica ||
+                    "Nenhuma dica disponível.";
+
+
+                total += analise.pontos || 0;
+
+
+                html += `
+                    <div class="analise">
+
+                        <h3>
+                            Pergunta ${i + 1} — ${analise.pontos || 0}/25
+                        </h3>
+
+                        <p>
+                            ${explicacao}
+                        </p>
+
+                        <div class="dica">
+                            💡 <strong>Dica:</strong> ${dica}
+                        </div>
+
+                    </div>
+                `;
+
+            }
+
+
+            // =================================================
+            // RESULTADO FINAL
+            // =================================================
+
+            let classificacao = "";
+
+
+            if (total === 100) {
+
+                classificacao =
+                    "🕵️ DETETIVE PERFEITO! CASO RESOLVIDO!";
+
+            } else if (total >= 75) {
+
+                classificacao =
+                    "🔎 Excelente investigação!";
+
+            } else if (total >= 50) {
+
+                classificacao =
+                    "🧐 Você encontrou várias pistas importantes.";
+
+            } else {
+
+                classificacao =
+                    "🔍 Ainda existem muitas pistas para descobrir.";
+
+            }
+
+
+            document.getElementById("resultado").innerHTML = `
+
+                <div class="nota">
+                    ${total}/100
+                </div>
+
+                <div class="perfeito">
+                    ${classificacao}
+                </div>
+
+                ${html}
+
+            `;
+
+
+            // =================================================
+            // 100% — SOM + CONFETES
+            // =================================================
+
+            if (total === 100) {
+
+                tocarSom();
+
+                soltarConfetes();
+
+                setTimeout(function() {
+
+                    window.open(
+                        "./resultado.png",
+                        "_blank"
+                    );
+
+                }, 3500);
+
+            }
+
+        } catch (erro) {
+
+            console.error(erro);
+
+            document.getElementById("resultado").innerHTML = `
+
+                <div class="analise">
+
+                    <h3>⚠️ Erro ao analisar o caso</h3>
+
+                    <p>
+                        Ocorreu um erro no sistema de análise.
+                    </p>
+
+                    <p>
+                        Abra o console do navegador para ver o erro.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // SOM
+    // =========================================================
+
+    function tocarSom() {
+
+        try {
+
+            const audio = new Audio(
+                "https://www.soundjay.com/human/applause-8.mp3"
+            );
+
+            audio.volume = 0.8;
+
+            audio.play().catch(function(erro) {
+
+                console.log(
+                    "O navegador bloqueou o áudio:",
+                    erro
+                );
+
+            });
+
+        } catch (erro) {
+
+            console.log(
+                "Não foi possível tocar o som.",
+                erro
+            );
+
+        }
+
+    }
+
+
+    // =========================================================
+    // CONFETES
+    // =========================================================
+
+    function soltarConfetes() {
+
+        const duracao = 3000;
+
+        const fim = Date.now() + duracao;
+
+
+        function criarConfete() {
+
+            const confete = document.createElement("div");
+
+            confete.style.position = "fixed";
+            confete.style.width = "10px";
+            confete.style.height = "10px";
+
+            confete.style.left =
+                Math.random() * 100 + "vw";
+
+            confete.style.top = "-10px";
+
+            confete.style.background =
+                "hsl(" +
+                Math.random() * 360 +
+                ", 100%, 50%)";
+
+            confete.style.zIndex = "9999";
+
+            confete.style.pointerEvents = "none";
+
+
+            document.body.appendChild(confete);
+
+
+            const velocidade =
+                2 + Math.random() * 5;
+
+            let posicao = -10;
+
+
+            const intervalo = setInterval(function() {
+
+                posicao += velocidade;
+
+                confete.style.top =
+                    posicao + "px";
+
+                confete.style.transform =
+                    "rotate(" +
+                    Math.random() * 360 +
+                    "deg)";
+
+
+                if (posicao > window.innerHeight) {
+
+                    clearInterval(intervalo);
+
+                    confete.remove();
+
+                }
+
+            }, 16);
+
+        }
+
+
+        const intervaloConfetes =
+            setInterval(function() {
+
+                criarConfete();
+                criarConfete();
+                criarConfete();
+
+                if (Date.now() > fim) {
+
+                    clearInterval(intervaloConfetes);
+
+                }
+
+            }, 80);
+
+    }
 
 </script>
 
 </body>
 </html>
-```
