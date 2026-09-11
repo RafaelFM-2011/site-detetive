@@ -275,7 +275,7 @@ function analisarPergunta(numero, resposta) {
      PERGUNTA 2
      ======================================================= */
 
-  if (numero === 2) {
+ if (numero === 2) {
     const motivos = [
         "rival",
         "rivalidade",
@@ -319,15 +319,15 @@ function analisarPergunta(numero, resposta) {
     if (encontrouMotivo && !negacao) {
         return {
             pontos: 25,
-            explicacao:
-                "Correto. Raimundo tinha um conflito com Antonio relacionado à empresa têxtil e às acusações de que Antonio roubava ou revendia produtos."
+            explicacao: "Correto! Raimundo tinha um conflito com Antonio relacionado à empresa têxtil e às acusações de que Antonio roubava ou revendia produtos.",
+            dica: "A pista principal está na relação entre Raimundo, Antonio e a empresa têxtil."
         };
     }
 
     return {
         pontos: 0,
-        explicacao:
-            "Essa resposta não apresenta o principal motivo da morte. Procure nas pistas a relação entre Antonio, Raimundo e a empresa têxtil."
+        explicacao: "A resposta não apresenta claramente o principal motivo da morte.",
+        dica: "Observe as pistas envolvendo Raimundo, a empresa têxtil e os produtos de Antonio."
     };
 }
 
@@ -420,110 +420,87 @@ function analisarPergunta(numero, resposta) {
      ======================================================= */
 
   if (numero === 4) {
+    const etapas = [
+        {
+            palavras: ["investig", "policia", "polícia", "dia 10"],
+            nome: "investigação"
+        },
+        {
+            palavras: ["fingiu", "simulou", "fingir", "simular", "morte falsa"],
+            nome: "fingiu a própria morte"
+        },
+        {
+            palavras: ["passagem secreta", "porta secreta", "passagem", "porta escondida"],
+            nome: "passagem secreta"
+        },
+        {
+            palavras: ["luz apagou", "luzes apagaram", "apagao", "apagão", "escuro", "luz"],
+            nome: "apagão"
+        },
+        {
+            palavras: ["floresta", "florest", "mata", "cabana"],
+            nome: "floresta"
+        },
+        {
+            palavras: ["fugir", "fuga", "escapar", "escapou", "sair da cidade"],
+            nome: "tentativa de fuga"
+        },
+        {
+            palavras: ["documento", "documentos", "cartas", "carta"],
+            nome: "documentos"
+        },
+        {
+            palavras: ["raimundo matou", "raimundo o matou", "morto por raimundo", "morto pelo raimundo"],
+            nome: "Raimundo matou Antonio"
+        }
+    ];
 
-    let elementos = 0;
+    let pontos = 0;
+    let encontrados = [];
 
-    if (contemAlguma(texto, ["raimundo"])) elementos++;
+    etapas.forEach(etapa => {
+        const encontrou = etapa.palavras.some(
+            palavra => texto.includes(normalizar(palavra))
+        );
 
-    if (
-      contemAlguma(texto, [
-        "passagem secreta",
-        "porta secreta"
-      ])
-    ) elementos++;
+        if (encontrou) {
+            pontos++;
+            encontrados.push(etapa.nome);
+        }
+    });
 
-    if (
-      contemAlguma(texto, [
-        "relogio",
-        "4 12",
-        "4:12"
-      ])
-    ) elementos++;
+    // 8 etapas possíveis = 100%
+    const porcentagem = Math.round((pontos / etapas.length) * 100);
 
-    if (
-      contemAlguma(texto, [
-        "luz",
-        "apagou",
-        "queda de energia",
-        "escuro"
-      ])
-    ) elementos++;
-
-    if (
-      contemAlguma(texto, [
-        "corpo",
-        "desapareceu"
-      ])
-    ) elementos++;
-
-    if (
-      contemAlguma(texto, [
-        "floresta"
-      ])
-    ) elementos++;
-
-    if (
-      contemAlguma(texto, [
-        "livro 9",
-        "livro"
-      ])
-    ) elementos++;
-
-    if (
-      contemAlguma(texto, [
-        "fuga",
-        "fugiu",
-        "passagem"
-      ])
-    ) elementos++;
-
-
-    /*
-      Para uma resposta completa, o jogador precisa
-      relacionar várias pistas.
-
-      Isso impede que apenas escrever
-      "Raimundo matou Antonio"
-      resolva a questão.
-    */
-
-    if (elementos >= 6) {
-
-      return {
-        pontos: 25,
-        classe: "certo",
-        titulo: "✓ Reconstrução consistente",
-        mensagem:
-          "Sua reconstrução consegue conectar uma grande quantidade das evidências apresentadas durante o caso. " +
-          "A conclusão não depende apenas de uma pista isolada."
-      };
-
+    if (porcentagem >= 100) {
+        return {
+            pontos: 25,
+            explicacao: "Excelente! Você reconstruiu toda a sequência: Antonio seria investigado, fingiu a própria morte, aproveitou o apagão para usar a passagem secreta, seguiu para a floresta e tentou fugir com os documentos, mas acabou sendo morto por Raimundo.",
+            dica: "Você encontrou todas as principais pistas."
+        };
     }
 
-    if (elementos >= 4) {
+    if (porcentagem >= 75) {
+        return {
+            pontos: 20,
+            explicacao: "Sua teoria está muito próxima. Você encontrou várias etapas importantes, mas ainda falta uma parte da sequência dos acontecimentos.",
+            dica: "Tente relacionar a investigação do dia 10, a passagem secreta, o apagão, a floresta, os documentos e Raimundo."
+        };
+    }
 
-      return {
-        pontos: 15,
-        classe: "parcial",
-        titulo: "⚠️ Reconstrução incompleta",
-        mensagem:
-          "Você conseguiu conectar várias pistas, mas ainda existem acontecimentos importantes que não foram explicados. " +
-          "Tente descobrir por que determinados objetos desapareceram e qual era a função deles na sequência dos acontecimentos."
-      };
-
+    if (porcentagem >= 50) {
+        return {
+            pontos: 15,
+            explicacao: "Você identificou parte importante do que aconteceu, mas sua explicação ainda deixou acontecimentos importantes de fora.",
+            dica: "Procure conectar as pistas em uma sequência de acontecimentos."
+        };
     }
 
     return {
-      pontos: 0,
-      classe: "errado",
-      titulo: "✗ Muitas lacunas na reconstrução",
-      mensagem:
-        "Sua teoria ainda deixa acontecimentos importantes sem explicação. " +
-        "Não tente resolver o caso usando apenas quem parece suspeito: reconstrua a ordem dos acontecimentos e compare cada pista."
+        pontos: 0,
+        explicacao: "Sua explicação ainda não reúne pistas suficientes para reconstruir o que aconteceu naquele dia.",
+        dica: "Observe a passagem secreta, o apagão, a floresta e as pistas relacionadas a Raimundo."
     };
-
-  }
-
 }
 
 
